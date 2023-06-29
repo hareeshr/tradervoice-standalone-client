@@ -13,7 +13,18 @@ import * as api from '../../../fake-backend/api';
 import {useSearchParams} from 'react-router-dom';
 import SearchEntry from './SearchEntry';
 
-const SearchInput = ({onTimeSeries}) => {
+type SearchInputProps = {
+  onTimeSeries: (timeSeriesLoaded: any[], timeSeriesLoading: number) => void;
+}
+
+type Search = {
+  text: string;
+  state: 'init' | 'loading' | 'loaded' | 'error' | "editing";
+  color: string;
+  timeSeries: any | null;
+};
+
+const SearchInput = ({onTimeSeries}: SearchInputProps) => {
   const theme = useTheme();
   const COLORS = [
     '#d500f9',
@@ -26,7 +37,7 @@ const SearchInput = ({onTimeSeries}) => {
   const MAX_ENTRIES = COLORS.length;
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const textParams = Array
+  const textParams: string[] = Array
     .from(new Set( // Remove duplicates.
       searchParams
         .getAll('t')
@@ -35,108 +46,114 @@ const SearchInput = ({onTimeSeries}) => {
     ))
     .slice(0, MAX_ENTRIES);
 
-  const [shuffledColors] = React.useState(() => COLORS
+  const [shuffledColors] = React.useState<string[]>(() => COLORS
     .map(color => ({color, sort: Math.random()}))
     .sort((a, b) => a.sort - b.sort)
     .map(({color}) => color));
 
-  const [searches, setSearches] = React.useState([]);
+  const [searches, setSearches] = React.useState<Search[]>([]);
 
-  const inputRef = React.useRef(null);
-  const [editText, setEditText] = React.useState(null);
-  const [editId, setEditId] = React.useState(null); // The color property is unique and static, thus serving as identifier (rather than array index which will shift on deletion)
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const [editText, setEditText] = React.useState<string | null>(null);
+  const [editId, setEditId] = React.useState<string | null>(null); // The color property is unique and static, thus serving as identifier (rather than array index which will shift on deletion)
 
   // Init from params
-  React.useMemo(() => {
-    setSearches(textParams.map((text, i) => ({
-      text,
-      state: 'init',
-      color: shuffledColors[i],
-      timeSeries: null
-    })));
-  }, [shuffledColors]);
-
+  React.useEffect(() => {
+    setSearches(
+      textParams.map((text: string, i: number) => ({
+        text,
+        state: 'init',
+        color: shuffledColors[i],
+        timeSeries: null
+      }))
+    );
+  }, [shuffledColors, textParams]);
   React.useMemo(() => {
     const timeSeriesLoaded = searches
-      .filter(s => s.state === 'loaded')
-      .map(s => ({
+      .filter((s: Search) => s.state === 'loaded')
+      .map((s: Search) => ({
         ...s.timeSeries,
         text: s.text,
         color: s.color
       }));
-    const timeSeriesLoading = searches
-      .filter(s => s.state === 'loading')
-      .length;
+    const timeSeriesLoading = searches.filter(
+      (s: Search) => s.state === 'loading'
+    ).length;
     setTimeout(() => onTimeSeries(timeSeriesLoaded, timeSeriesLoading));
 
-    const init = searches.filter(s => s.state === 'init');
+    const init = searches.filter((s: Search) => s.state === 'init');
     if (init.length > 0) {
-      init.forEach(s => {
+      init.forEach((s: Search) => {
         const searchText = s.text;
 
         api.timeSeries(searchText)
-          .then(timeSeries => {
+          .then((timeSeries: any) => {
             resolveSearch(searchText, timeSeries);
           })
-          .catch(reason => {
+          .catch((reason: any) => {
             console.error('err', reason);
             resolveSearch(searchText, null);
           });
         s.state = 'loading';
       });
 
-      setSearches(prevState => [...prevState]);
+      setSearches((prevState: Search[]) => [...prevState]);
     }
-  }, [searches]);
+  }, [searches, onTimeSeries]);
 
-  const resolveSearch = (text, timeSeries) => {
-    setSearches(prevState => {
-      const entry = prevState.find(s => s.text === text);
+  const resolveSearch = (text: string, timeSeries: any | null) => {
+    setSearches((prevState: Search[]) => {
+      const entry = prevState.find((s: Search) => s.text === text);
       if (entry !== undefined && entry.state === 'loading') {
         entry.state = timeSeries == null ? 'error' : 'loaded';
         entry.timeSeries = timeSeries;
 
         return [...prevState];
-      } else { // Ignore if no longer present in searches
+      } else {
         return prevState;
       }
     });
-  }
+  };
 
-  const syncParams = newSearches => {
+  const syncParams = (newSearches: Search[]) => {
     const currentTexts = searchParams.getAll('t');
-    const newTexts = newSearches.map(s => s.text);
+    const newTexts = newSearches.map((s: Search) => s.text);
     if (JSON.stringify(newTexts) !== JSON.stringify(currentTexts)) {
       setSearchParams(
-        sp => {
+        (sp: URLSearchParams) => {
           sp.delete('t');
-          newTexts.forEach(t => sp.append('t', t));
+          newTexts.forEach((t: string) => sp.append('t', t));
           sp.sort();
 
           return sp;
         },
-        {replace: true}
+        { replace: true }
       );
     }
-  }
-
+  };
+  
   const handleSubmit = () => {
     setEditText(null);
     setEditId(null);
 
-    const newText = editText.trim();
-    if (newText.length > 0 && !searches.find(s => s.text === newText)) { // Ensure no duplicates by ignoring submission if an entry with same text already exists
+    const newText = editText?.trim() || '';
+    if (
+      newText.length > 0 &&
+      !searches.find((s: Search) => s.text === newText)
+    ) {
       let isChange = true;
       const newSearches = [...searches];
       if (editId == null) {
         newSearches.push({
           text: newText,
           state: 'init',
-          color: shuffledColors.find(c => !newSearches.map(s => s.color).includes(c)),
+          color: shuffledColors.find(
+            (c: string) => !newSearches.map((s: Search) => s.color).includes(c)
+          ) || '',
           timeSeries: null
         });
       } else {
-        const entry = searches.find(s => s.color === editId);
+        const entry = searches.find((s: Search) => s.color === editId);
         if (entry !== undefined && entry.text !== newText) {
           entry.text = newText;
           entry.state = 'init';
@@ -151,22 +168,24 @@ const SearchInput = ({onTimeSeries}) => {
         syncParams(newSearches);
       }
     }
-  }
-
-  const handleBeginEdit = id => {
+  };
+  
+  const handleBeginEdit = (id: string | null) => {
     setEditId(id);
-    setEditText(id == null ? '' : searches.find(s => s.color === id).text);
-    setTimeout(() => inputRef.current.focus()); // Delay to make sure input field is rendered
-  }
+    setEditText(
+      id == null ? '' : searches.find((s: Search) => s.color === id)?.text || ''
+    );
+    setTimeout(() => inputRef.current?.focus());
+  };
 
-  const handleDelete = id => {
+  const handleDelete = (id: string) => {
     setEditText(null);
     setEditId(null);
 
-    const newSearches = [...searches].filter(s => s.color !== id);
+    const newSearches = [...searches].filter((s: Search) => s.color !== id);
     setSearches(newSearches);
     syncParams(newSearches);
-  }
+  };
 
   return (
     <React.Fragment>

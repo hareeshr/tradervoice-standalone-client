@@ -2,7 +2,13 @@ import * as React from 'react';
 import {Card, CardContent, Divider, Link, Typography} from '@mui/material';
 import PropTypes from 'prop-types';
 
-const ArticleLink = ({href, ...props}) => {
+type ArticleLinkProps = {
+  href: string,
+  variant?: string,
+  children: React.ReactNode;
+}
+
+const ArticleLink = ({href, variant, ...props}: ArticleLinkProps) => {
   return (
     <Link
       href={href}
@@ -15,7 +21,22 @@ const ArticleLink = ({href, ...props}) => {
   )
 };
 
-const ArticleBox = ({article, onDismiss, ...props}) => {
+type Article = {
+  title: string,
+  id: string,
+  url: string,
+  published: string,
+  originates_title: string,
+  originates_url: string,
+}
+
+type ArticleBoxProps = {
+  article: Article,
+  onDismiss: any
+  style: any
+}
+
+const ArticleBox = ({article, onDismiss, ...props}: ArticleBoxProps) => {
   return (
     <Card
       raised

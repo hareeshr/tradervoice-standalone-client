@@ -8,10 +8,18 @@ import FeedIcon from '@mui/icons-material/Feed';
 import * as api from '../../../fake-backend/api';
 import PropTypes from 'prop-types';
 
-const Summary = ({text, color, ...props}) => {
-  const [summary, setSummary] = React.useState(null);
+type SummaryProps = {
+  text: string;
+  color: string;
+  component: string;
+  sx: {mb: number;}
+};
 
-  React.useMemo(() => {
+const Summary = ({text, color, ...props}: SummaryProps) => {
+  
+  const [summary, setSummary] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
     api.summary(text)
       .then(setSummary)
       .catch(reason => console.error(reason));

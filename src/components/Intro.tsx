@@ -1,15 +1,20 @@
-import {Paper, Stack, Typography} from '@mui/material';
+import { Paper, Stack, Typography } from '@mui/material';
 
-const Section = props => (
+type SectionProps = {
+  children: React.ReactNode;
+};
+
+const Section = (props: SectionProps) => (
   <Paper
     component="article"
     sx={{
-      backgroundColor: theme => theme.palette.action.hover,
+      backgroundColor: (theme) => theme.palette.action.hover,
       flex: '1 1 50%',
       hyphens: 'auto',
       p: 2,
       pb: 0
-  }}>
+    }}
+  >
     {props.children}
   </Paper>
 );
@@ -18,7 +23,7 @@ export default function Intro() {
   return (
     <Stack
       component="aside"
-      direction={{'xs': 'column', 'sm': 'row'}}
+      direction={{ xs: 'column', sm: 'row' }}
       justifyContent="space-between"
       alignItems="stretch"
       spacing={2}

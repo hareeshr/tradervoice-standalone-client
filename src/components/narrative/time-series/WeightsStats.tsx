@@ -2,7 +2,18 @@ import * as React from 'react';
 import {Typography} from '@mui/material';
 import PropTypes from 'prop-types';
 
-const WeightsStats = ({stats, ...props}) => {
+type WeightsStatsProps = {
+  stats:{
+    tstamp: string;
+    significant: number;
+  },
+  sx:{
+    ml: number;
+    mr: number;
+  }
+}
+
+const WeightsStats = ({stats, ...props}: WeightsStatsProps) => {
   const NUMBER_FORMAT = new Intl.NumberFormat('en-US');
   const INCREMENT_RATE_PER_SEC = 0.182;
   const tstamp = new Date(stats.tstamp);

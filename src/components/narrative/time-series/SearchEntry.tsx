@@ -11,7 +11,21 @@ import EditIcon from '@mui/icons-material/Edit';
 import ErrorIcon from '@mui/icons-material/Error';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 
-const SearchEntry = ({search, onEdit, onDelete, ...props}) => {
+
+type SearchEntryProps = {
+  search: {
+    state: 'loading' | 'loaded' | 'error' | 'editing' | 'default';
+    color: string;
+    data?: string;
+    text: string;
+  };
+  onEdit: () => void;
+  onDelete: () => void;
+  component: string,
+  sx: {m:number}
+};
+
+const SearchEntry = ({search, onEdit, onDelete, ...props}: SearchEntryProps) => {
   const icon = React.useMemo(() => {
     switch (search.state) {
       case 'loading': return <CircularProgress size={35} sx={{color: search.color}}/>;

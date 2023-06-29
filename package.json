@@ -23,9 +23,10 @@
     "web-vitals": "2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test"
+    "start": "react-scripts start --entry ./src/index.tsx",
+    "build": "react-scripts build --entry ./src/index.tsx",
+    "test": "react-scripts test --entry ./src/index.tsx",
+    "build:ts": "tsc"
   },
   "eslintConfig": {
     "extends": [
@@ -44,5 +45,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.0",
+    "typescript": "^5.1.5"
   }
 }

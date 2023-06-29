@@ -2,12 +2,17 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {ToggleButton, ToggleButtonGroup} from '@mui/material';
 
-const PrevalenceSentimentSelector = ({sentimentSelected, onChange}) => {
-  const handleChange = (_, newValue) => {
+type PrevalenceSentimentSelectorProps = {
+  sentimentSelected: boolean;
+  onChange: (selected: boolean) => void;
+}
+
+const PrevalenceSentimentSelector = ({sentimentSelected, onChange}: PrevalenceSentimentSelectorProps) => {
+  const handleChange = (_: React.MouseEvent<HTMLElement>, newValue: string | null) => {
     if (newValue !== null) {
       onChange(newValue === 'sentiment');
     }
-  }
+  };
 
   return (
     <ToggleButtonGroup
