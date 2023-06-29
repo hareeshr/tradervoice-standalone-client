@@ -91,7 +91,7 @@ const SearchInput = ({onTimeSeries}: SearchInputProps) => {
 
       setSearches((prevState: Search[]) => [...prevState]);
     }
-  }, [searches, onTimeSeries]);
+  }, [searches]);
 
   const resolveSearch = (text: string, timeSeries: any | null) => {
     setSearches((prevState: Search[]) => {

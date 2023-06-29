@@ -53,7 +53,7 @@ const Chart = ({timeSeries}: chartProps) => {
     }) => e.color),
       isSentimentSelected
     );
-  }, [timeSeries, isSentimentSelected, xDomain]);
+  }, [timeSeries, isSentimentSelected]);
 
   const handleSentimentSelection = (selection: boolean): void => {
     setSearchParams(
