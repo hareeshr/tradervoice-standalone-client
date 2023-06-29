@@ -17,31 +17,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import PropTypes from 'prop-types';
 import * as api from '../../../fake-backend/api';
 import { red, green } from '@mui/material/colors';
-
-type Symbol = {
-  symbol: string;
-  label: string;
-  name: string;
-  type: string;
-  typeSortable: number;
-  filterables: string[];
-  price: number;
-  changeAbs: number;
-  changePct: number;
-};
-
-type TimeSeries = {
-  from: Date;
-  prices: {
-    symbol: string;
-    label: string;
-    name: string;
-    tstamp: string;
-    price: number;
-    changeAbs: number;
-    changePct: number;
-  }[];
-};
+import { SymbolData, TimeSeries } from '../../../types';
 
 type SymbolsProps = {
   onTimeSeries: (timeSeries?: TimeSeries) => void;
@@ -50,10 +26,10 @@ type SymbolsProps = {
 const ORDERED_TYPES = ['INDEX', 'CURRENCY', 'CRYPTOCURRENCY', 'FUTURE', 'EQUITY'];
 
 const Symbols: React.FC<SymbolsProps> = ({ onTimeSeries }) => {
-  const [symbols, setSymbols] = React.useState<Symbol[]>([]);
-  const [selectedSymbol, setSelectedSymbol] = React.useState<string | undefined>();
+  const [symbols, setSymbols] = React.useState<SymbolData[]>([]);
+  const [selectedSymbol, setSelectedSymbol] = React.useState<string | null>();
   const [filter, setFilter] = React.useState('');
-  const [filteredSymbols, setFilteredSymbols] = React.useState<Symbol[]>([]);
+  const [filteredSymbols, setFilteredSymbols] = React.useState<SymbolData[]>([]);
 
   React.useMemo(() => {
     api.symbols()
@@ -79,19 +55,21 @@ const Symbols: React.FC<SymbolsProps> = ({ onTimeSeries }) => {
 
   React.useEffect(() => {
     if (selectedSymbol !== undefined) {
-      api.symbol(selectedSymbol)
-        .then((timeSeries) => onTimeSeries(timeSeries))
-        .catch(() => setSelectedSymbol(undefined));
+      api.symbol(selectedSymbol || '')
+        .then((timeSeries) => {
+          onTimeSeries(timeSeries)
+        })
+        .catch(() => setSelectedSymbol(null));
     } else {
       onTimeSeries(undefined);
     }
-  }, [onTimeSeries, selectedSymbol]);
+  }, [selectedSymbol]);
 
   React.useMemo(() => {
     setFilteredSymbols(
       filter.length > 0
         ? symbols.filter(
-            (s) => s.symbol === selectedSymbol || s.filterables.some((filterable) => filterable.includes(filter))
+            (s) => s.symbol === selectedSymbol || s.filterables?.some((filterable) => filterable.includes(filter))
           )
         : symbols
     );

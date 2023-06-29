@@ -12,6 +12,7 @@ import Chart from './Chart';
 import SearchInput from './SearchInput';
 import Intro from '../../Intro';
 import Summary from './Summary';
+import type { TimeSeries as TimeSeriesType } from '../../../types';
 
 type CombinedTimeSeries = {
   meta: {
@@ -29,7 +30,7 @@ const TimeSeries = () => {
   const theme = useTheme();
 
   const [combinedTimeSeries, setCombinedTimeSeries] = React.useState<CombinedTimeSeries | undefined>();
-  const [symbolTimeSeries, setSymbolTimeSeries] = React.useState<any>(); // TODO Specify the type
+  const [symbolTimeSeries, setSymbolTimeSeries] = React.useState<TimeSeriesType>(); // TODO Specify the type
   const [textTimeSeries, setTextTimeSeries] = React.useState<any[]>([]); // TODO Specify the type
   const [isTextLoading, setTextLoading] = React.useState(false);
 

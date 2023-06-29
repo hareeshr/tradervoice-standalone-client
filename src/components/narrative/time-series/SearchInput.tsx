@@ -12,17 +12,11 @@ import AddIcon from '@mui/icons-material/Add';
 import * as api from '../../../fake-backend/api';
 import {useSearchParams} from 'react-router-dom';
 import SearchEntry from './SearchEntry';
+import { Search } from '../../../types';
 
 type SearchInputProps = {
   onTimeSeries: (timeSeriesLoaded: any[], timeSeriesLoading: number) => void;
 }
-
-type Search = {
-  text: string;
-  state: 'init' | 'loading' | 'loaded' | 'error' | "editing";
-  color: string;
-  timeSeries: any | null;
-};
 
 const SearchInput = ({onTimeSeries}: SearchInputProps) => {
   const theme = useTheme();
@@ -58,16 +52,14 @@ const SearchInput = ({onTimeSeries}: SearchInputProps) => {
   const [editId, setEditId] = React.useState<string | null>(null); // The color property is unique and static, thus serving as identifier (rather than array index which will shift on deletion)
 
   // Init from params
-  React.useEffect(() => {
-    setSearches(
-      textParams.map((text: string, i: number) => ({
-        text,
-        state: 'init',
-        color: shuffledColors[i],
-        timeSeries: null
-      }))
-    );
-  }, [shuffledColors, textParams]);
+  React.useMemo(() => {
+    setSearches(textParams.map((text, i) => ({
+      text,
+      state: 'init',
+      color: shuffledColors[i],
+      timeSeries: null
+    })));
+  }, [shuffledColors]);
   React.useMemo(() => {
     const timeSeriesLoaded = searches
       .filter((s: Search) => s.state === 'loaded')

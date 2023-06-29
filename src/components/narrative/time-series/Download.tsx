@@ -3,22 +3,10 @@ import { Button, Stack, Tooltip } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { ExportToCsv } from 'export-to-csv';
-
-
-type WeightPoint = {
-  significant: any | null;
-  tstamp: Date;
-  value: number;
-  sentiment?: number; // Add optional property for sentiment
-  prevalence?: number; // Add optional property for prevalence
-};
+import { Weights } from '../../../types';
 
 type DownloadProps = {
-  weights: { 
-    text?: string;
-    color: string;
-     points: WeightPoint[]; 
-  }[];
+  weights: Weights;
   sx: {minWidth: string}
 };
 

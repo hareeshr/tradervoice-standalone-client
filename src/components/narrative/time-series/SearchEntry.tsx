@@ -10,15 +10,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ErrorIcon from '@mui/icons-material/Error';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
+import { Search } from '../../../types';
 
 
 type SearchEntryProps = {
-  search: {
-    state: 'loading' | 'loaded' | 'error' | 'editing' | 'default';
-    color: string;
-    data?: string;
-    text: string;
-  };
+  search: Search;
   onEdit: () => void;
   onDelete: () => void;
   component: string,

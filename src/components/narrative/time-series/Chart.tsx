@@ -3,7 +3,6 @@ import * as React from 'react';
 import {Stack, Typography, Tooltip, useTheme} from '@mui/material';
 import * as d3 from 'd3';
 import * as fc from 'd3fc';
-import PropTypes from 'prop-types';
 import Download from './Download';
 import PrevalenceSentimentSelector from './PrevalenceSentimentSelector';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
@@ -11,52 +10,26 @@ import WeightsStats from './WeightsStats';
 import {red} from '@mui/material/colors';
 import ArticleBox from './ArticleBox';
 import {useSearchParams} from 'react-router-dom';
+import { WeightTimeSeries, WeightPoint, PricePoint } from './../../../types'
 
 const SP_VALUES = 'values';
 const SP_VALUES_SENTIMENT = 'sentiment';
 
-type WeightPoint = {
-  significant: any | null;
-  tstamp: Date;
-  value: number;
-  sentiment?: number; // Add optional property for sentiment
-  prevalence?: number; // Add optional property for prevalence
-};
-
-type PricePoint = {
-  price: number | null;
-  tstamp: Date;
-};
-
-type TimeSeries = {
-  meta: {
-    from: Date;
-    weightsStats: any; // Update the type to match your specific requirements
-  };
-  price: {
-    color: string;
-    points: PricePoint[];
-  };
-  weights: {
-    color: string;
-    points: WeightPoint[];
-  }[];
-};
 
 type chartProps = {
-  timeSeries : TimeSeries
+  timeSeries : WeightTimeSeries
 }
 
 const Chart = ({timeSeries}: chartProps) => {
   const theme = useTheme();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const svgRef = React.useRef<SVGSVGElement>(null);
+  const svgRef = React.useRef<any>(null);
 
   const [isSentimentSelected, setSentimentSelected] = React.useState(
     searchParams.get(SP_VALUES) === SP_VALUES_SENTIMENT
   );
-  const [selectedArticle, setSelectedArticle] = React.useState<any | null>(null);
+  const [selectedArticle, setSelectedArticle] = React.useState<{ article: any; x: number; y: number; } | null>(null);
   const [xDomain, setXDomain] = React.useState<Date[] | undefined>();
   
   React.useMemo(() => {
@@ -66,12 +39,18 @@ const Chart = ({timeSeries}: chartProps) => {
   React.useEffect(() => {
     renderChart(
       timeSeries.meta.from,
-      timeSeries.price.points.map((p) => ({ ...p, tstamp: new Date(p.tstamp) })),
+      timeSeries.price.points?.map((p) => ({ ...p, tstamp: new Date(p.tstamp) })) || [],
       timeSeries.price.color,
-      timeSeries.weights.map((e) =>
+      timeSeries.weights.map((e:{
+        color: string;
+        points: WeightPoint[];
+      }) =>
         e.points.map((p) => ({ ...p, tstamp: new Date(p.tstamp), value: isSentimentSelected ? p.sentiment : p.prevalence }))
       ),
-      timeSeries.weights.map((e) => e.color),
+      timeSeries.weights.map((e:{
+        color: string;
+        points: WeightPoint[];
+    }) => e.color),
       isSentimentSelected
     );
   }, [timeSeries, isSentimentSelected, xDomain]);
@@ -103,9 +82,9 @@ const Chart = ({timeSeries}: chartProps) => {
    */
   const renderChart = (
     from: Date,
-    pricePoints: { price: number; tstamp: Date }[],
+    pricePoints: { price: number | null; tstamp: Date }[],
     priceColor: string,
-    weightsPoints: { value: number; tstamp: Date; significant?: any }[][],
+    weightsPoints: { tstamp: Date; value: number | undefined; significant: any; sentiment?: number | undefined; prevalence?: number | undefined; }[][],
     weightsColors: string[],
     weightsUseSentiment: boolean
   ): void => {
@@ -294,7 +273,7 @@ const Chart = ({timeSeries}: chartProps) => {
           </linearGradient>
         </defs>
       </svg>
-      <d3fc-svg ref={svgRef} style={{flex: '1 0 auto', width: '100%'}}/>
+      <div className="d3fc-svg" ref={svgRef} style={{flex: '1 0 auto', width: '100%'}}/>
       {selectedArticle &&
         <ArticleBox
           article={selectedArticle.article}
@@ -323,43 +302,6 @@ const Chart = ({timeSeries}: chartProps) => {
       </Stack>
     </React.Fragment>
   );
-}
-
-Chart.propTypes = {
-  timeSeries: PropTypes
-    .shape({
-      meta: PropTypes
-        .shape({
-          from: PropTypes.instanceOf(Date).isRequired,
-          weightsStats: PropTypes.object
-        })
-        .isRequired,
-      price: PropTypes
-        .shape({
-          color: PropTypes.string.isRequired,
-          points: PropTypes
-            .arrayOf(PropTypes.shape({
-              price: PropTypes.number.isRequired,
-              tstamp: PropTypes.string.isRequired
-            }))
-            .isRequired
-        })
-        .isRequired,
-      weights: PropTypes
-        .arrayOf(PropTypes.shape({
-          color: PropTypes.string.isRequired,
-          points: PropTypes
-            .arrayOf(PropTypes.shape({
-              prevalence: PropTypes.number.isRequired,
-              sentiment: PropTypes.number.isRequired,
-              significant: PropTypes.object,
-              tstamp: PropTypes.string.isRequired
-            }))
-            .isRequired
-          }))
-        .isRequired
-    })
-    .isRequired
 }
 
 export default Chart;
