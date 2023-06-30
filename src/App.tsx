@@ -8,7 +8,6 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import {Container, Stack} from '@mui/material';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
-import './App.css';
 
 const theme = createTheme({
   palette: {
@@ -20,12 +19,12 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline/>
-      <Stack height="100%">
-        <Container component="main" maxWidth={false} sx={{flexGrow: 1}}>
+      {/* <Stack height="100%">
+        <Container component="main" maxWidth={false} sx={{flexGrow: 1}}> */}
           <Outlet/>
-        </Container>
-        <Footer/>
-      </Stack>
+        {/* </Container> */}
+        {/* <Footer/> */}
+      {/* </Stack> */}
     </ThemeProvider>
   );
 }

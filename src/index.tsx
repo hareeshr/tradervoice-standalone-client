@@ -5,6 +5,7 @@ import * as ReactRouterDom from 'react-router-dom';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import TimeSeries from './components/narrative/time-series/TimeSeries';
+import './index.css';
 
 const router = createBrowserRouter([
   {
