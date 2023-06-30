@@ -1,0 +1,12 @@
+@import "https://code.highcharts.com/css/stocktools/gui.css";
+@import "https://code.highcharts.com/css/annotations/popup.css";
+
+.highcharts-bindings-wrapper .highcharts-stocktools-toolbar li {
+    /* filter: invert(100%); */
+}
+.tv-wrapper{
+    position: relative;
+}
+.tv-toolbar.highcharts-bindings-wrapper{
+    /* position: relative; */
+}

@@ -88,6 +88,8 @@ const Chart = ({timeSeries}: chartProps) => {
     weightsColors: string[],
     weightsUseSentiment: boolean
   ): void => {
+    // console.log({from, pricePoints, priceColor, weightsPoints, weightsColors, weightsUseSentiment})
+    // console.log(JSON.stringify(weightsPoints));
     const hasPrice: boolean = pricePoints.length > 0;
     const significantPoints: Array<any> = weightsPoints
       .flatMap((series: Array<any>, i: number) => series

@@ -13,6 +13,7 @@ import SearchInput from './SearchInput';
 import Intro from '../../Intro';
 import Summary from './Summary';
 import type { TimeSeries as TimeSeriesType } from '../../../types';
+import HighChart from './HighChart';
 
 type CombinedTimeSeries = {
   meta: {
@@ -69,6 +70,7 @@ const TimeSeries = () => {
       <Grid container direction="column" item sm={12} md={9}>
         <Grid container item minHeight={750} flexDirection="column">
           {combinedTimeSeries && <Chart timeSeries={combinedTimeSeries} />}
+          {combinedTimeSeries && <HighChart timeSeries={combinedTimeSeries} />}
           {!combinedTimeSeries && !isTextLoading && (
             <Box sx={{ pl: 2, pr: 8, pt: 2, my: 'auto' }}>
               <Intro />
