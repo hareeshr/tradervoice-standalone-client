@@ -8,6 +8,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import {Container, Stack} from '@mui/material';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
+import './App.css';
 
 const theme = createTheme({
   palette: {
@@ -20,7 +21,6 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline/>
       <Stack height="100%">
-        <Header/>
         <Container component="main" maxWidth={false} sx={{flexGrow: 1}}>
           <Outlet/>
         </Container>
