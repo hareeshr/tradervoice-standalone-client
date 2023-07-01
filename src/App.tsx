@@ -4,6 +4,9 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import {Outlet} from 'react-router-dom';
+import { SeriesProvider } from './context/SeriesContext';
+import { SearchProvider } from './context/SearchContext';
+import { LoadingProvider } from './context/LoadingContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import {Container, Stack} from '@mui/material';
@@ -17,14 +20,20 @@ const theme = createTheme({
 
 export default function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline/>
-      {/* <Stack height="100%">
-        <Container component="main" maxWidth={false} sx={{flexGrow: 1}}> */}
-          <Outlet/>
-        {/* </Container> */}
-        {/* <Footer/> */}
-      {/* </Stack> */}
-    </ThemeProvider>
+    <LoadingProvider>
+      <SeriesProvider>
+        <SearchProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline/>
+            {/* <Stack height="100%">
+              <Container component="main" maxWidth={false} sx={{flexGrow: 1}}> */}
+                <Outlet/>
+              {/* </Container> */}
+              {/* <Footer/> */}
+            {/* </Stack> */}
+          </ThemeProvider>
+        </SearchProvider>
+      </SeriesProvider>
+    </LoadingProvider>
   );
 }

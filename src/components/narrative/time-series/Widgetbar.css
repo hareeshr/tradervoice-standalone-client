@@ -1,0 +1,51 @@
+.widgetSection{
+    display: flex;
+    gap: 0.625rem;
+}
+.symbolBox{
+    background-color: #23252B;
+    border-radius: 5px;
+    padding: 0.625rem;
+    width: 362px;
+    max-width: 100%;
+    max-height: calc(100vh - 74px);
+}
+.widgetBar{
+    background-color: #23252B;
+    display: flex;
+    flex-direction: column;
+    padding: 0.625rem;
+    padding-left: 0.315rem;
+    gap: 0.625rem;
+    border-radius: 5px;
+}
+.widgetButton{
+    background-color: transparent;
+    color:#fff;
+    cursor: pointer;
+    padding:0.315rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.widgetButton > *{
+    z-index: 10;
+}
+.widgetButton .icon{
+    font-size: 2rem;
+}
+.symbolButton:hover:before,
+.symbolButton.active-button:before{
+    content: '';
+    background-color: #4D515D;
+    width: calc(100% + 0.315rem);
+    height: 100%;
+    display: block;
+    position: absolute;
+    top:0px;
+    left: -0.315rem;
+    z-index: 0;
+    border-radius: 0 5px 5px 0;
+}

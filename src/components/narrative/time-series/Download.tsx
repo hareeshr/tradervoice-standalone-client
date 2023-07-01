@@ -1,17 +1,20 @@
-import * as React from 'react';
-import { Button, Stack, Tooltip } from '@mui/material';
-import DownloadIcon from '@mui/icons-material/Download';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { useContext } from 'react';
+// import { Button, Stack, Tooltip } from '@mui/material';
+// import DownloadIcon from '@mui/icons-material/Download';
+// import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { ExportToCsv } from 'export-to-csv';
-import { Weights } from '../../../types';
+// import { Weights } from '../../../types';
+import { SeriesContext } from './../../../context/SeriesContext';
 
-type DownloadProps = {
-  weights: Weights;
-  sx: {minWidth: string}
-};
+const Download = () => {
+  const { combinedTimeSeries } = useContext(SeriesContext);
 
-const Download: React.FC<DownloadProps> = ({ weights, ...props }) => {
+  if(!combinedTimeSeries)return null;
+  
+
   const handleDownloadCsv = () => {
+    const weights = combinedTimeSeries.weights;
+
     const count = weights.length;
 
     const headers: string[] = ['Timestamp (UTC)'];
@@ -22,7 +25,7 @@ const Download: React.FC<DownloadProps> = ({ weights, ...props }) => {
 
       headers.push(`Prevalence: ${weightsItem.text}`, `Sentiment: ${weightsItem.text}`);
 
-      weightsItem.points.forEach((p) => {
+      weightsItem.points.forEach((p:any) => {
         const timestamp = p.tstamp.toString().substring(0, 19).replace('T', ' ');
         let values = pointsByTimestamp.get(timestamp);
 
@@ -52,18 +55,13 @@ const Download: React.FC<DownloadProps> = ({ weights, ...props }) => {
   };
 
   return (
-    <Stack alignItems="center" direction="row" spacing={1} {...props}>
-      <Button onClick={handleDownloadCsv} startIcon={<DownloadIcon />} variant="outlined">
-        Download CSV
-      </Button>
-      <Tooltip
-        arrow
-        title={`Download the current prevalence and sentiment series as a CSV file for local processing/analysis. The CSV file will consist of ${weights.length} series of prevalence and sentiment values.`}
-      >
-        <HelpOutlineIcon fontSize="small" />
-      </Tooltip>
-    </Stack>
-  );
+    <button className={`widgetButton symbolButton`} onClick={handleDownloadCsv}>
+        <i className="icon tv-icon-download"/>
+        <div>
+            Download <br />CSV
+        </div>
+    </button>
+  )
 };
 
 export default Download;
