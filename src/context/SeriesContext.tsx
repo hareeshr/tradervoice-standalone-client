@@ -28,6 +28,8 @@ interface SeriesContextProps {
   isSentimentSelected: boolean;
   setSentimentSelected: React.Dispatch<React.SetStateAction<boolean>>;
   handleSentimentSelection: (selection: boolean) => void;
+  selectedSymbol: string | null;
+  setSelectedSymbol:React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const SeriesContext = createContext<SeriesContextProps>({} as SeriesContextProps);
@@ -45,6 +47,7 @@ const SeriesProvider = ({ children }: SeriesProviderProps) => {
   const [combinedTimeSeries, setCombinedTimeSeries] = useState<CombinedTimeSeries | undefined>();
   const [symbolTimeSeries, setSymbolTimeSeries] = useState<TimeSeriesType | undefined>();
   const [textTimeSeries, setTextTimeSeries] = useState<any[]>([]);
+  const [selectedSymbol, setSelectedSymbol] = React.useState<string | null>(null);
   
   const [searchParams, setSearchParams] = useSearchParams();
   const [isSentimentSelected, setSentimentSelected] = React.useState(
@@ -103,7 +106,9 @@ const SeriesProvider = ({ children }: SeriesProviderProps) => {
         setTextTimeSeries,
         isSentimentSelected,
         setSentimentSelected,
-        handleSentimentSelection
+        handleSentimentSelection,
+        selectedSymbol,
+        setSelectedSymbol
       }}
     >
       {children}

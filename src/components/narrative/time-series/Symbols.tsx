@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import {
   Box,
   Checkbox,
@@ -18,6 +18,7 @@ import PropTypes from 'prop-types';
 import * as api from '../../../fake-backend/api';
 import { red, green } from '@mui/material/colors';
 import { SymbolData, TimeSeries } from '../../../types';
+import { SeriesContext } from './../../../context/SeriesContext';
 
 type SymbolsProps = {
   onTimeSeries: (timeSeries?: TimeSeries) => void;
@@ -26,8 +27,9 @@ type SymbolsProps = {
 const ORDERED_TYPES = ['INDEX', 'CURRENCY', 'CRYPTOCURRENCY', 'FUTURE', 'EQUITY'];
 
 const Symbols: React.FC<SymbolsProps> = ({ onTimeSeries }) => {
+  const { selectedSymbol, setSelectedSymbol } = useContext(SeriesContext);
+
   const [symbols, setSymbols] = React.useState<SymbolData[]>([]);
-  const [selectedSymbol, setSelectedSymbol] = React.useState<string | null>();
   const [filter, setFilter] = React.useState('');
   const [filteredSymbols, setFilteredSymbols] = React.useState<SymbolData[]>([]);
 
@@ -77,7 +79,7 @@ const Symbols: React.FC<SymbolsProps> = ({ onTimeSeries }) => {
 
   const handleToggle = (symbol: string) => {
     setSelectedSymbol((prevSelectedSymbol) =>
-      prevSelectedSymbol === symbol ? undefined : symbol
+      prevSelectedSymbol === symbol ? null : symbol
     );
   };
 
