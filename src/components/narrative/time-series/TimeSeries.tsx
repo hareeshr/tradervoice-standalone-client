@@ -1,18 +1,4 @@
 import React, { useContext } from 'react';
-import {
-  Box,
-  Container,
-  Grid,
-  Typography,
-  useTheme
-} from '@mui/material';
-import Symbols from './Symbols';
-import EngineeringIcon from '@mui/icons-material/Engineering';
-import Chart from './Chart';
-import SearchInput from './SearchInput';
-import Intro from '../../Intro';
-import Summary from './Summary';
-import type { TimeSeries as TimeSeriesType } from '../../../types';
 import HighChart from './HighChart';
 import Header from '../../Header';
 import Toolbar from './Toolbar';
@@ -22,42 +8,12 @@ import Bottombar from './Bottombar';
 import LoadingChart from './LoadingChart';
 import { SeriesContext } from './../../../context/SeriesContext';
 import { LoadingContext } from './../../../context/LoadingContext';
+import Intro from '../../Intro';
 
 const TimeSeries = () => {
-  const theme = useTheme();
 
-  const { combinedTimeSeries, setCombinedTimeSeries, symbolTimeSeries, setSymbolTimeSeries, textTimeSeries, setTextTimeSeries } = useContext(SeriesContext);
-  const { isTextLoading, setTextLoading } = useContext(LoadingContext);
-
-  React.useMemo(() => {
-    const isSymbolsLoaded = symbolTimeSeries !== undefined;
-    const isAnyTextsLoaded = textTimeSeries.length > 0;
-    if (isSymbolsLoaded || isAnyTextsLoaded) {
-      const earliestDate = textTimeSeries
-        .concat(isSymbolsLoaded ? [symbolTimeSeries] : [])
-        .map((ts) => new Date(ts.from))
-        .reduce((min, date) => (date < min ? date : min));
-
-      setCombinedTimeSeries({
-        meta: {
-          from: earliestDate,
-          weightsStats: isAnyTextsLoaded ? textTimeSeries[0].statistics : null, // TODO Which one to use? Or have stats in separate endpoint?
-        },
-        price: {
-          color: theme.palette.primary.main,
-          points: isSymbolsLoaded ? symbolTimeSeries.points : [],
-        },
-        weights: textTimeSeries,
-      });
-    } else {
-      setCombinedTimeSeries(undefined);
-    }
-  }, [symbolTimeSeries, textTimeSeries]);
-
-  const handleTextTimeSeries = (loaded: any, loading: number) => {
-    setTextTimeSeries(loaded);
-    setTextLoading(loading > 0);
-  };
+  const { combinedTimeSeries, setSymbolTimeSeries } = useContext(SeriesContext);
+  const { isTextLoading } = useContext(LoadingContext);
 
   return (
     <div className="tv-container">

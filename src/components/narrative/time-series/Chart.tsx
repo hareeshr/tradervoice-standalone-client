@@ -55,21 +55,21 @@ const Chart = ({timeSeries}: chartProps) => {
     );
   }, [timeSeries, isSentimentSelected]);
 
-  const handleSentimentSelection = (selection: boolean): void => {
-    setSearchParams(
-      (sp: URLSearchParams) => {
-        if (selection) {
-          sp.set(SP_VALUES, SP_VALUES_SENTIMENT);
-        } else {
-          sp.delete(SP_VALUES);
-        }
+  // const handleSentimentSelection = (selection: boolean): void => {
+  //   setSearchParams(
+  //     (sp: URLSearchParams) => {
+  //       if (selection) {
+  //         sp.set(SP_VALUES, SP_VALUES_SENTIMENT);
+  //       } else {
+  //         sp.delete(SP_VALUES);
+  //       }
   
-        return sp;
-      },
-      { replace: true }
-    );
-    setSentimentSelected(selection);
-  };
+  //       return sp;
+  //     },
+  //     { replace: true }
+  //   );
+  //   setSentimentSelected(selection);
+  // };
   
 
   /**
