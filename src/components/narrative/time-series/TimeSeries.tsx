@@ -24,7 +24,8 @@ const TimeSeries = () => {
         <div className="dashboard">
           <div className="charts tv-box">
             {combinedTimeSeries  
-              ? <HighChart timeSeries={combinedTimeSeries} />
+              // ? <Chart timeSeries={combinedTimeSeries} />
+              ? <HighChart />
               : ( 
                 !isTextLoading
                 ? <Intro />

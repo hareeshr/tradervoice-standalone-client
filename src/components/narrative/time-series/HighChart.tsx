@@ -11,6 +11,7 @@ import StockTools from "highcharts/modules/stock-tools.js";
 import "./chartStyle.css";
 import { WeightTimeSeries, WeightPoint, PricePoint } from './../../../types'
 import { SeriesContext } from './../../../context/SeriesContext';
+import SearchEntries from "./SearchEntries";
 
 // init the module
 // Indicators(Highcharts);
@@ -27,12 +28,12 @@ const options = {
         color: '#ffffff'
       }
     },
-    subtitle: {
-        text: 'Using the Boost module',
-        style:{
-          color: '#ffffff'
-        }
-    },
+    // subtitle: {
+    //     text: 'Using the Boost module',
+    //     style:{
+    //       color: '#ffffff'
+    //     }
+    // },
     stockTools: {
         gui: {
             enabled: false
@@ -63,6 +64,7 @@ const options = {
       },
     chart: {
         backgroundColor: '#23252b',
+        // height: '100%',
         style: {
             cursor: 'crosshair',
             // https://api.highcharts.com/class-reference/Highcharts.html#.CursorValue
@@ -160,11 +162,7 @@ const options = {
     ]
 };
 
-
-type HighChartProps = {
-    timeSeries : WeightTimeSeries
-  }
-const HighChart = ({ timeSeries, ...props }:HighChartProps) =>{
+const HighChart = () =>{
     const { combinedTimeSeries, isSentimentSelected } = useContext(SeriesContext);
 
     const chartRef = useRef<HighchartsReact.Props | null>(null);
@@ -203,7 +201,7 @@ const HighChart = ({ timeSeries, ...props }:HighChartProps) =>{
               }
           }
         }, 
-        minY: Math.floor(minY / 1000) * 1000
+        minY: minY
       }
     }
 
@@ -312,25 +310,32 @@ const HighChart = ({ timeSeries, ...props }:HighChartProps) =>{
     
     
   return (
-    <div className="tv-wrapper" id="tv-wrapper">
+    <div className="tv-wrapper">
+      <div className="tv-chart">
         <HighchartsReact
-        immutable={true}
-        highcharts={Highcharts}
-        // constructorType={"stockChart"}
-        options={chartOptions}
-        ref={chartRef}
-        />
+          immutable={true}
+          highcharts={Highcharts}
+          // constructorType={"stockChart"}
+          options={chartOptions}
+          ref={chartRef}
+          />
+      
+      </div>
+
+      <SearchEntries />
+
       
       <div className="highcharts-popup highcharts-popup-annotations">
-        <span className="highcharts-close-popup">&times;</span>
-        <div className="highcharts-popup-wrapper">
-          <label htmlFor="stroke">Color</label>
-          <input type="text" name="stroke" />
-          <label htmlFor="stroke-width">Width</label>
-          <input type="text" name="stroke-width" />
+          <span className="highcharts-close-popup">&times;</span>
+          <div className="highcharts-popup-wrapper">
+            <label htmlFor="stroke">Color</label>
+            <input type="text" name="stroke" />
+            <label htmlFor="stroke-width">Width</label>
+            <input type="text" name="stroke-width" />
+          </div>
+          <button>Save</button>
+          
         </div>
-        <button>Save</button>
-      </div>
     </div>
   )
 }

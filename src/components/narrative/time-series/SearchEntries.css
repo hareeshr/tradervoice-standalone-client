@@ -1,0 +1,4 @@
+.searchEntries{
+    display: flex;
+    flex-wrap: nowrap;
+}

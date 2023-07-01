@@ -6,7 +6,11 @@
 }
 .tv-wrapper{
     position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
-.tv-toolbar.highcharts-bindings-wrapper{
-    /* position: relative; */
+.tv-chart{
+    flex-grow: 1;
+    display: grid;
 }
