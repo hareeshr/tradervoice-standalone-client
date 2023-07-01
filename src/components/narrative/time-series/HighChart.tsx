@@ -43,7 +43,7 @@ const options = {
     navigation: {
         annotationsOptions: {
           shapeOptions: {
-            // stroke: 'white'
+            stroke: 'white'
           }
         },
         events: {

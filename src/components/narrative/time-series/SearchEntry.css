@@ -1,0 +1,33 @@
+.search-entry{
+    background-color: #4D515D;
+    font-size: 14px;
+    padding: 0.625rem;
+    padding-left: 2.5rem;
+    border-radius: 5px;
+    display: flex;
+    gap: 0.625rem;
+    position: relative;
+}
+.search-entry > span {
+    position: absolute;
+    left: 15px;
+    top: 12px;
+}
+.search-entry .icon-left{
+    font-size: 1.2rem;
+    position: absolute;
+    left: 8px;
+}
+.search-entry .icon-left.tv-icon-edit{
+    font-size: 0.8rem;
+    left: 15px;
+    top: 12px;
+}
+.search-entry button {
+    cursor: pointer;
+}
+.search-entry .icon {
+    font-size: 0.8rem;
+    line-height: 1.4rem;
+    color: white;
+}
