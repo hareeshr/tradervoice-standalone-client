@@ -78,9 +78,11 @@ const options = {
       crosshair: {
         snap: false
       },
+      // startOnTick: true,
+      // endOnTick: true,
       // tickInterval: 10,
-      // min : 0,
-      // max: 100,
+      // min : 34000,
+      max: null,
       labels: {
         style: {
             color: '#ffffff'
@@ -93,7 +95,8 @@ const options = {
           //     color: '#ffffff'
           // }
       }
-    },{
+    },
+    {
       crosshair: {
         snap: false
       },
@@ -154,44 +157,6 @@ const options = {
         },
     },
     series: [
-        // {
-        //     type: 'scatter',
-        //     stickyTracking: false,
-        //     // enableMouseTracking: false,
-        //     data: data3,
-        //     tooltip:{
-        //         pointFormat: '<a href="{point.url}">{point.title}</a>',
-        //         enabled: true
-        //     }
-        // },
-        // {
-        //     type: 'line',
-        //     data: data,
-        //     lineWidth: 0.5,
-        //     enableMouseTracking: false,
-        //     marker: {
-        //         enabled: false,
-        //         states: {
-        //             hover: {
-        //                 enabled: false
-        //             }
-        //         }
-        //     },
-        // }, 
-        // {
-        //     type: 'area',
-        //     data: data2,
-        //     lineWidth: 0.5,
-        //     enableMouseTracking: false,
-        //     marker: {
-        //         enabled: false,
-        //         states: {
-        //             hover: {
-        //                 enabled: false
-        //             }
-        //         }
-        //     }
-        // }
     ]
 };
 
@@ -204,34 +169,42 @@ const HighChart = ({ timeSeries, ...props }:HighChartProps) =>{
 
     const chartRef = useRef<HighchartsReact.Props | null>(null);
     const [chartOptions, setChartOptions] = useState<any>(options);
-
-    const [chartPoints, setChartPoints] = useState<any>([]);
-
+    
     const getPriceData = () => {
       if(combinedTimeSeries?.price.points.length === 0) return null;
 
-      const data  = combinedTimeSeries?.price.points.map(point => ([
-        new Date(point.tstamp).getTime(),
-        point.price
-      ]))
+      let minY = 10000000;
+      let data:any = [];
+      combinedTimeSeries?.price.points.forEach((point:any) => {
+        data.push([
+          new Date(point.tstamp).getTime(),
+          point.price
+        ]);
+        if(minY > point.price)minY = point.price;
+      });
+
+      
       return {
-        type: 'area',
-        name: 'Price Points',
-        // turboThreshold: 3000,
-        color: combinedTimeSeries?.price.color,
-        data: data,
-        lineWidth: 0.5,
-        enableMouseTracking: false,
-        yAxis: 0,
-        marker: {
-            enabled: false,
-            states: {
-                hover: {
-                    enabled: false
-                }
-            }
-        }
-      };
+        pointData: {
+          type: 'area',
+          name: 'Price Points',
+          // turboThreshold: 3000,
+          color: combinedTimeSeries?.price.color,
+          data: data,
+          lineWidth: 0.5,
+          enableMouseTracking: false,
+          yAxis: 0,
+          marker: {
+              enabled: false,
+              states: {
+                  hover: {
+                      enabled: false
+                  }
+              }
+          }
+        }, 
+        minY: Math.floor(minY / 1000) * 1000
+      }
     }
 
     const getWeightData = () => {
@@ -302,8 +275,12 @@ const HighChart = ({ timeSeries, ...props }:HighChartProps) =>{
     useEffect(() => {
 
       let chartData:any = [];
-      const priceData = getPriceData();
-      if(priceData) {
+      let minY = 0;
+      // const [priceData, minY] = getPriceData();
+      const tempData = getPriceData();
+      if(tempData) {
+        const priceData = tempData.pointData;
+        minY = tempData.minY;
         chartData.push(priceData)
       }
 
@@ -315,33 +292,29 @@ const HighChart = ({ timeSeries, ...props }:HighChartProps) =>{
       // const pricePoints = getPricePoints();
       console.log(chartData)
 
-
-
+      // chartRef.current?.update(chartData);
+      console.log(minY);
       setChartOptions((prevOptions:any) => ({
         ...prevOptions,
-        series: chartData
-        // [
-          // ...areaChart
-          // ...prevOptions.series,
-          // {
-          //   type: 'scatter',
-          //   stickyTracking: false,
-          //   data: getDataSignificant(10),
-          //   tooltip: {
-          //     pointFormat: '<a href="{point.url}">{point.title}</a>',
-          //     enabled: true
-          //   }
-          // }
-        // ]
+        series: chartData,
+        yAxis: [
+          {
+            ...prevOptions.yAxis[0],
+            min: minY // New min value for yAxis[0]
+          },
+          ...prevOptions.yAxis.slice(1) // Keep the other yAxis options unchanged
+        ]
       }));
+
     }, [combinedTimeSeries, isSentimentSelected]);
 
-    console.log(combinedTimeSeries);
+    // console.log(combinedTimeSeries);
     
     
   return (
     <div className="tv-wrapper" id="tv-wrapper">
         <HighchartsReact
+        immutable={true}
         highcharts={Highcharts}
         // constructorType={"stockChart"}
         options={chartOptions}

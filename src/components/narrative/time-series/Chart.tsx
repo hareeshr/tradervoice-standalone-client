@@ -55,21 +55,21 @@ const Chart = ({timeSeries}: chartProps) => {
     );
   }, [timeSeries, isSentimentSelected]);
 
-  // const handleSentimentSelection = (selection: boolean): void => {
-  //   setSearchParams(
-  //     (sp: URLSearchParams) => {
-  //       if (selection) {
-  //         sp.set(SP_VALUES, SP_VALUES_SENTIMENT);
-  //       } else {
-  //         sp.delete(SP_VALUES);
-  //       }
+  const handleSentimentSelection = (selection: boolean): void => {
+    setSearchParams(
+      (sp: URLSearchParams) => {
+        if (selection) {
+          sp.set(SP_VALUES, SP_VALUES_SENTIMENT);
+        } else {
+          sp.delete(SP_VALUES);
+        }
   
-  //       return sp;
-  //     },
-  //     { replace: true }
-  //   );
-  //   setSentimentSelected(selection);
-  // };
+        return sp;
+      },
+      { replace: true }
+    );
+    setSentimentSelected(selection);
+  };
   
 
   /**
@@ -275,7 +275,7 @@ const Chart = ({timeSeries}: chartProps) => {
           </linearGradient>
         </defs>
       </svg>
-      <div className="d3fc-svg" ref={svgRef} style={{flex: '1 0 auto', width: '100%'}}/>
+      <div className="d3fc-svg" ref={svgRef} style={{flex: '1 0 auto', width: '100%', height: '50%'}}/>
       {selectedArticle &&
         <ArticleBox
           article={selectedArticle.article}

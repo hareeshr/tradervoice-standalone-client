@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import HighChart from './HighChart';
+import Chart from './Chart';
 import Header from '../../Header';
 import Toolbar from './Toolbar';
 import './TimeSeries.css';
