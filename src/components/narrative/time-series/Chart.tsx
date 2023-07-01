@@ -299,8 +299,8 @@ const Chart = ({timeSeries}: chartProps) => {
         mr={8}
         spacing={2}
       >
-        <PrevalenceSentimentSelector sentimentSelected={isSentimentSelected} onChange={handleSentimentSelection}/>
-        <Download sx={{minWidth: 'fit-content'}} weights={timeSeries.weights}/>
+        {/* <PrevalenceSentimentSelector sentimentSelected={isSentimentSelected} onChange={handleSentimentSelection}/> */}
+        {/* <Download sx={{minWidth: 'fit-content'}} weights={timeSeries.weights}/> */}
       </Stack>
     </React.Fragment>
   );
