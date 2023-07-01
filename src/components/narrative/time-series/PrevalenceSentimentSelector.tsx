@@ -1,36 +1,22 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext } from 'react';
 import {ToggleButton, ToggleButtonGroup} from '@mui/material';
+import { SeriesContext } from './../../../context/SeriesContext';
+import './PrevalenceSentimentSelector.css'
 
-type PrevalenceSentimentSelectorProps = {
-  sentimentSelected: boolean;
-  onChange: (selected: boolean) => void;
-}
+const PrevalenceSentimentSelector = () => {
 
-const PrevalenceSentimentSelector = ({sentimentSelected, onChange}: PrevalenceSentimentSelectorProps) => {
-  const handleChange = (_: React.MouseEvent<HTMLElement>, newValue: string | null) => {
-    if (newValue !== null) {
-      onChange(newValue === 'sentiment');
-    }
-  };
+  const { isSentimentSelected, handleSentimentSelection } = useContext(SeriesContext);
 
   return (
-    <ToggleButtonGroup
-      color="primary"
-      exclusive
-      value={sentimentSelected ? 'sentiment' : 'prevalence'}
-      onChange={handleChange}
-      size="small"
-    >
-      <ToggleButton value="prevalence">Prevalence</ToggleButton>
-      <ToggleButton value="sentiment">Sentiment</ToggleButton>
-    </ToggleButtonGroup>
-  );
-}
-
-PrevalenceSentimentSelector.propTypes = {
-  sentimentSelected: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired // (bool) => void
+    <div className="modeToggle">
+      <button className={`${isSentimentSelected ? '' : 'active-button'}`} onClick={() => handleSentimentSelection(false)}>
+        Prevalence
+      </button>
+      <button className={`${isSentimentSelected ? 'active-button' : ''}`} onClick={() => handleSentimentSelection(true)}>
+        Sentiment
+      </button>
+    </div>
+  )
 }
 
 export default PrevalenceSentimentSelector;

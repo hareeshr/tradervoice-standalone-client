@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import FeedIcon from '@mui/icons-material/Feed';
 import * as api from '../../../fake-backend/api';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 type SummaryProps = {
   text: string;
@@ -26,19 +26,12 @@ const Summary = ({text, color, ...props}: SummaryProps) => {
   }, [text]);
 
   return (
-    <Paper
-      {...props}
-      sx={{
-        ...props.sx,
-        px: 2,
-        py: 1
-      }}
-    >
+    <div className="summaryItem">
       <Typography color={color} variant="h6">
         <FeedIcon sx={{verticalAlign: 'text-bottom', ml: -1, mr: 1}}/>
         In the news: {text}
       </Typography>
-      <Typography color="text.secondary" textAlign="justify">
+      <Typography color="white" textAlign="justify">
         {summary === null
           ? <React.Fragment>
               <Skeleton animation="wave"/>
@@ -48,13 +41,8 @@ const Summary = ({text, color, ...props}: SummaryProps) => {
           : summary
         }
       </Typography>
-    </Paper>
+    </div>
   );
 };
-
-Summary.propTypes = {
-  text: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired
-}
 
 export default Summary;
