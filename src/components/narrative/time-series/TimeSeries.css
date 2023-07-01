@@ -1,0 +1,25 @@
+.tv-container{
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+.tv-container main{
+    display: flex;
+    flex-grow: 1;
+    gap: 0.625rem;
+}
+.tv-container .dashboard {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+.tv-container .dashboard > .charts{
+    flex-grow: 1;
+}
+.tv-box {
+    background-color: #23252B;
+    border-radius: 5px;
+    padding: 20px;
+}
