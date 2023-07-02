@@ -1,35 +1,24 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import './Toolbar.css'
+import { SeriesContext } from './../../../context/SeriesContext';
 
 const Toolbar = () => {
+
+  const { selectedCross, toggleCross } = useContext(SeriesContext);
+
   return (
     <div className="toolbar highcharts-stocktools-wrapper highcharts-bindings-container highcharts-bindings-wrapper">
       <div className="highcharts-menu-wrapper">
         <ul className="highcharts-stocktools-toolbar stocktools-toolbar">
-          <li className="highcharts-label-annotation" title="Simple shapes">
-            <i className="icon tv-icon-shape"/>
-            <span className="highcharts-menu-item-btn"></span>
-            <span className="highcharts-menu-item-title">Shapes</span>
-            <span className="highcharts-submenu-item-arrow highcharts-arrow-right"></span>
-            <ul className="highcharts-submenu-wrapper">
-              <li className="highcharts-label-annotation" title="Label">
-                <span className="highcharts-menu-item-btn"></span>
-                <span className="highcharts-menu-item-title">Label</span>
-              </li>
-              <li className="highcharts-circle-annotation" title="Circle">
-                <span className="highcharts-menu-item-btn"></span>
-                <span className="highcharts-menu-item-title">Circle</span>
-              </li>
-              <li className="highcharts-rectangle-annotation " title="Rectangle">
-                <span className="highcharts-menu-item-btn"></span>
-                <span className="highcharts-menu-item-title">Rectangle</span>
-              </li>
-              <li className="highcharts-ellipse-annotation" title="Ellipse">
-                <span className="highcharts-menu-item-btn"></span>
-                <span className="highcharts-menu-item-title">Ellipse</span>
-              </li>
-            </ul>
+
+          <li className={`highcharts-cursor ${selectedCross ? 'active' : ''}`} title="Crosshair" onClick={toggleCross}>
+              <i className="icon tv-icon-cross-hair"/>
+              <span className="highcharts-menu-item-btn"></span>
+              <span className="highcharts-menu-item-title">Cross</span>
           </li>
+
+          <li className="toolbar-divider"></li>
+
           <li className="highcharts-segment" title="Lines">
             <i className="icon tv-icon-line"/>
             <span className="highcharts-menu-item-btn"></span>
@@ -70,6 +59,7 @@ const Toolbar = () => {
               </li>
             </ul>
           </li>
+          
           <li className="highcharts-elliott3" title="Crooked lines">
             <i className="icon tv-icon-crooked-lines"/>
             <span className="highcharts-menu-item-btn"></span>
@@ -91,6 +81,31 @@ const Toolbar = () => {
               <li className="highcharts-crooked5" title="Crooked 5 line">
                 <span className="highcharts-menu-item-btn" ></span>
                 <span className="highcharts-menu-item-title">Crooked 5</span>
+              </li>
+            </ul>
+          </li>
+
+          <li className="highcharts-label-annotation" title="Simple shapes">
+            <i className="icon tv-icon-shape"/>
+            <span className="highcharts-menu-item-btn"></span>
+            <span className="highcharts-menu-item-title">Shapes</span>
+            <span className="highcharts-submenu-item-arrow highcharts-arrow-right"></span>
+            <ul className="highcharts-submenu-wrapper">
+              <li className="highcharts-label-annotation" title="Label">
+                <span className="highcharts-menu-item-btn"></span>
+                <span className="highcharts-menu-item-title">Label</span>
+              </li>
+              <li className="highcharts-circle-annotation" title="Circle">
+                <span className="highcharts-menu-item-btn"></span>
+                <span className="highcharts-menu-item-title">Circle</span>
+              </li>
+              <li className="highcharts-rectangle-annotation " title="Rectangle">
+                <span className="highcharts-menu-item-btn"></span>
+                <span className="highcharts-menu-item-title">Rectangle</span>
+              </li>
+              <li className="highcharts-ellipse-annotation" title="Ellipse">
+                <span className="highcharts-menu-item-btn"></span>
+                <span className="highcharts-menu-item-title">Ellipse</span>
               </li>
             </ul>
           </li>

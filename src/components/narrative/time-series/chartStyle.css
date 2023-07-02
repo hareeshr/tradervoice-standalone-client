@@ -26,8 +26,9 @@
 }
 .tooltip-dividers{
     width: 80%;
-    /* height: 1px; */
-    /* background-color: white; */
     display: block;
     margin: 10px auto;
+}
+.tv-chart.class-on-mousedown svg{
+    cursor: grabbing !important;
 }

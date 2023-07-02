@@ -30,6 +30,8 @@ interface SeriesContextProps {
   handleSentimentSelection: (selection: boolean) => void;
   selectedSymbol: string | null;
   setSelectedSymbol:React.Dispatch<React.SetStateAction<string | null>>;
+  selectedCross: boolean;
+  toggleCross: () => void;
 }
 
 const SeriesContext = createContext<SeriesContextProps>({} as SeriesContextProps);
@@ -48,6 +50,11 @@ const SeriesProvider = ({ children }: SeriesProviderProps) => {
   const [symbolTimeSeries, setSymbolTimeSeries] = useState<TimeSeriesType | undefined>();
   const [textTimeSeries, setTextTimeSeries] = useState<any[]>([]);
   const [selectedSymbol, setSelectedSymbol] = React.useState<string | null>(null);
+  const [selectedCross, setSelectedCross] = React.useState<boolean>(false);
+
+  const toggleCross = () => {
+    setSelectedCross((prevCross) => !prevCross);
+  };
   
   const [searchParams, setSearchParams] = useSearchParams();
   const [isSentimentSelected, setSentimentSelected] = React.useState(
@@ -108,7 +115,9 @@ const SeriesProvider = ({ children }: SeriesProviderProps) => {
         setSentimentSelected,
         handleSentimentSelection,
         selectedSymbol,
-        setSelectedSymbol
+        setSelectedSymbol,
+        selectedCross,
+        toggleCross
       }}
     >
       {children}

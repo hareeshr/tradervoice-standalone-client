@@ -47,6 +47,10 @@ const options = {
           }
         },
         events: {
+          mousedown: function(event:any) {
+            // Custom logic when mousedown event is triggered
+            console.log('Mouse button pressed at x: ' + event.xAxis[0].value + ', y: ' + event.yAxis[0].value);
+          },
           selectButton: function(event:any) {
               // Select button
               event.button.classList.add('active');
@@ -66,38 +70,20 @@ const options = {
         backgroundColor: '#23252b',
         // height: '100%',
         style: {
-            cursor: 'crosshair',
+            cursor: 'default',
+            // cursor: 'crosshair',
+            // cursor: 'grabbing',
             // https://api.highcharts.com/class-reference/Highcharts.html#.CursorValue
 
             color: '#ffffff'
         },
-        panning: {
-            enabled: true,
-            type: 'x'
-        },
+        // panning: {
+        //     enabled: true,
+        //     type: 'x'
+        // },
     },
-  yAxis: [{
-      crosshair: {
-        snap: false
-      },
-      // startOnTick: true,
-      // endOnTick: true,
-      // tickInterval: 10,
-      // min : 34000,
-      max: null,
-      labels: {
-        style: {
-            color: '#ffffff'
-        }
-      },
-      title: {
-        enabled: false,
-          // text: 'Custom Y-Axis Title',
-          // style: {
-          //     color: '#ffffff'
-          // }
-      }
-    },
+  yAxis: [
+    
     {
       crosshair: {
         snap: false
@@ -118,7 +104,29 @@ const options = {
           //     color: '#ffffff'
           // }
       }
-    }
+    },
+    {
+      crosshair: {
+        snap: false
+      },
+      // startOnTick: true,
+      // endOnTick: true,
+      // tickInterval: 10,
+      // min : 34000,
+      // max: null,
+      labels: {
+        style: {
+            color: '#ffffff'
+        }
+      },
+      title: {
+        enabled: false,
+          // text: 'Custom Y-Axis Title',
+          // style: {
+          //     color: '#ffffff'
+          // }
+      }
+    },
   
   ],
   xAxis: {
@@ -144,7 +152,8 @@ const options = {
             inactive: {
               opacity: 1
             }
-          }
+          },
+          draggable: true
         }
       },
     credits: {
@@ -165,10 +174,20 @@ const options = {
 };
 
 const HighChart = () =>{
-    const { combinedTimeSeries, isSentimentSelected } = useContext(SeriesContext);
+    const { combinedTimeSeries, isSentimentSelected, selectedCross  } = useContext(SeriesContext);
 
     const chartRef = useRef<HighchartsReact.Props | null>(null);
     const [chartOptions, setChartOptions] = useState<any>(options);
+
+    const [isMouseDown, setIsMouseDown] = useState(false);
+
+    const handleMouseDown = () => {
+      setIsMouseDown(true);
+    };
+  
+    const handleMouseUp = () => {
+      setIsMouseDown(false);
+    };
     
     const getPriceData = () => {
       if(combinedTimeSeries?.price.points.length === 0) return null;
@@ -193,7 +212,7 @@ const HighChart = () =>{
           data: data,
           lineWidth: 0.5,
           enableMouseTracking: false,
-          yAxis: 0,
+          yAxis: 1,
           marker: {
               enabled: false,
               states: {
@@ -238,7 +257,7 @@ const HighChart = () =>{
             data: lineData,
             lineWidth: 1,
             enableMouseTracking: false,
-            yAxis: 1,
+            yAxis: 0,
             marker: {
                 enabled: false,
                 states: {
@@ -255,7 +274,7 @@ const HighChart = () =>{
               color: series.color,
               stickyTracking: false,
               // enableMouseTracking: false,
-              yAxis: 1,
+              yAxis: 0,
               data: scatterData,
               tooltip:{
                   pointFormat: `<a href="{point.significant.url}">
@@ -301,32 +320,57 @@ const HighChart = () =>{
 
       // chartRef.current?.update(chartData);
       console.log(minY);
-      setChartOptions((prevOptions:any) => ({
-        ...prevOptions,
-        series: chartData,
-        yAxis: [
-          {
-            ...prevOptions.yAxis[0],
-            min: minY // New min value for yAxis[0]
-          },
-          ...prevOptions.yAxis.slice(1) // Keep the other yAxis options unchanged
-        ]
-      }));
+      setChartOptions((prevOptions:any) => {
+        const updatedYAxis = [...prevOptions.yAxis];
+        updatedYAxis[1] = {
+          ...updatedYAxis[1],
+          min: minY // New min value for the second yAxis item
+        };
+
+        return {
+          ...prevOptions,
+          series: chartData,
+          yAxis: updatedYAxis
+        };
+      });
 
     }, [combinedTimeSeries, isSentimentSelected]);
+
+
+    // Update chart options when selectedCross changes
+    React.useEffect(() => {
+      
+      const chart = chartRef.current?.chart;
+      if (chart) {
+        chart.update({
+          chart: {
+            style: {
+              cursor: selectedCross ? "crosshair" : "default"
+            },
+            panning: {
+              enabled: selectedCross ? true : false,
+              type: selectedCross ? "x" : null,
+            }
+          }
+        });
+      }
+    }, [selectedCross]);
 
     // console.log(combinedTimeSeries);
     
     
   return (
     <div className="tv-wrapper">
-      <div className="tv-chart">
+      <div className={`tv-chart ${isMouseDown && selectedCross ? 'class-on-mousedown' : ''}`}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}>
         <HighchartsReact
           immutable={true}
           highcharts={Highcharts}
           // constructorType={"stockChart"}
           options={chartOptions}
           ref={chartRef}
+          className={isMouseDown ? 'class-on-mousedown' : 'default-class'}
           />
       
       </div>
