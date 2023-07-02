@@ -14,3 +14,20 @@
     flex-grow: 1;
     display: grid;
 }
+.highcharts-label.highcharts-tooltip a{
+    color: #90caf9;
+}
+.highcharts-label.highcharts-tooltip a span{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    max-width: 250px;
+}
+.tooltip-dividers{
+    width: 80%;
+    /* height: 1px; */
+    /* background-color: white; */
+    display: block;
+    margin: 10px auto;
+}

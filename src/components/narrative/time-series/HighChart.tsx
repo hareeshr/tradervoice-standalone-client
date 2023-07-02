@@ -155,8 +155,10 @@ const options = {
         useHTML: true,
         hideDelay: 1500,
         style: {
-            pointerEvents: 'auto'
+            pointerEvents: 'auto',
+            color: 'white'
         },
+        backgroundColor: '#4D515D'
     },
     series: [
     ]
@@ -256,7 +258,14 @@ const HighChart = () =>{
               yAxis: 1,
               data: scatterData,
               tooltip:{
-                  pointFormat: '<a href="{point.significant.url}">{point.significant.title}</a>',
+                  pointFormat: `<a href="{point.significant.url}">
+                                  <span>{point.significant.title}</span>
+                                  <span>{point.significant.url}
+                                </a>
+                                <span class="tooltip-dividers"></span>
+                                Published: {point.significant.published}<br/>
+                                Via: <a href="http://{point.significant.originates_url}">{point.significant.originates_title}</a> ({point.significant.originates_url})
+                                `,
                   enabled: true
               },
               marker: {
