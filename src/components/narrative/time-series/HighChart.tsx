@@ -1,17 +1,18 @@
 import React, { useRef, useContext, useState, useEffect } from "react";
-import { render } from "react-dom";
+// import { render } from "react-dom";
 import Highcharts from "highcharts/highstock";
 import HighchartsReact from "highcharts-react-official";
-import Indicators from "highcharts/indicators/indicators-all.js";
+// import Indicators from "highcharts/indicators/indicators-all.js";
 import DragPanes from "highcharts/modules/drag-panes.js";
 import AnnotationsAdvanced from "highcharts/modules/annotations-advanced.js";
-import PriceIndicator from "highcharts/modules/price-indicator.js";
+// import PriceIndicator from "highcharts/modules/price-indicator.js";
 import FullScreen from "highcharts/modules/full-screen.js";
 import StockTools from "highcharts/modules/stock-tools.js";
 import "./chartStyle.css";
-import { WeightTimeSeries, WeightPoint, PricePoint } from './../../../types'
+// import { WeightTimeSeries, WeightPoint, PricePoint } from './../../../types'
 import { SeriesContext } from './../../../context/SeriesContext';
 import SearchEntries from "./SearchEntries";
+import WeightsStats from "./WeightsStats";
 
 // init the module
 // Indicators(Highcharts);
@@ -47,10 +48,6 @@ const options = {
           }
         },
         events: {
-          mousedown: function(event:any) {
-            // Custom logic when mousedown event is triggered
-            console.log('Mouse button pressed at x: ' + event.xAxis[0].value + ', y: ' + event.yAxis[0].value);
-          },
           selectButton: function(event:any) {
               // Select button
               event.button.classList.add('active');
@@ -316,10 +313,10 @@ const HighChart = () =>{
       }
       // let weightsChart:any = [];
       // const pricePoints = getPricePoints();
-      console.log(chartData)
+      // console.log(chartData)
 
       // chartRef.current?.update(chartData);
-      console.log(minY);
+      // console.log(minY);
       setChartOptions((prevOptions:any) => {
         const updatedYAxis = [...prevOptions.yAxis];
         updatedYAxis[1] = {
@@ -378,6 +375,7 @@ const HighChart = () =>{
       
       </div>
 
+      <WeightsStats sx={{ml: 2, mr: 8}} stats={combinedTimeSeries?.meta.weightsStats}/>
       <SearchEntries />
 
       

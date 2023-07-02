@@ -1,20 +1,20 @@
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  AppBar,
-  Box,
+  // AppBar,
+  // Box,
   Button,
   IconButton,
   styled,
-  Toolbar,
+  // Toolbar,
   useTheme,
 } from '@mui/material';
-import SearchInput2 from './narrative/time-series/SearchInput2';
+import SearchInput from './narrative/time-series/SearchInput';
 import LogoutIcon from '@mui/icons-material/Logout';
 import logoDark from './../gfx/logo.dark.svg';
 import logoLight from '../gfx/logo.light.svg';
 import './Header.css'
 
-const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
+// const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
 type MenuItemType = {
   title: string,
@@ -22,10 +22,10 @@ type MenuItemType = {
 };
 
 export default function Header() {
-  const MENU_ITEMS: MenuItemType[] = [
+  // const MENU_ITEMS: MenuItemType[] = [
     // {title: 'Time-series', link: '/narrative/quickstart'},
     // {title: 'Visual Narratives', link: '/visualnarratives'}
-  ];
+  // ];
 
   const theme = useTheme();
 
@@ -43,7 +43,7 @@ export default function Header() {
             height="46"
           />
         </Button>
-        <SearchInput2 />
+        <SearchInput />
         <IconButton
           onClick={onSignOut}
           title="Sign Out"

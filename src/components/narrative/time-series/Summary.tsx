@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  Paper,
+  // Paper,
   Skeleton,
   Typography
 } from '@mui/material';

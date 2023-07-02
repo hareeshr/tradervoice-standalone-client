@@ -13,7 +13,7 @@ type LoadingProviderProps ={
 
 const LoadingProvider = ({ children }: LoadingProviderProps) => {
 
-    const [isTextLoading, setTextLoading] = React.useState(false);
+    const [isTextLoading, setTextLoading] = useState(false);
 
   return (
     <LoadingContext.Provider
