@@ -326,11 +326,14 @@ const HighChart = () =>{
           ...updatedYAxis[1],
           min: minY // New min value for the second yAxis item
         };
+        const title:any = {...prevOptions.title};
+        title.text = isSentimentSelected ? 'Sentiment' : 'Prevalence';
 
         return {
           ...prevOptions,
           series: chartData,
-          yAxis: updatedYAxis
+          yAxis: updatedYAxis,
+          title: title,
         };
       });
 
