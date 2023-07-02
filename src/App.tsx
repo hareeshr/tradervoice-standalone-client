@@ -7,9 +7,9 @@ import {Outlet} from 'react-router-dom';
 import { SeriesProvider } from './context/SeriesContext';
 import { SearchProvider } from './context/SearchContext';
 import { LoadingProvider } from './context/LoadingContext';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import {Container, Stack} from '@mui/material';
+// import Header from './components/Header';
+// import Footer from './components/Footer';
+// import {Container, Stack} from '@mui/material';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 
 const theme = createTheme({
