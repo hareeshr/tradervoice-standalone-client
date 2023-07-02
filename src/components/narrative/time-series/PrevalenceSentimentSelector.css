@@ -1,0 +1,17 @@
+.modeToggle{
+    display: flex;
+    gap:0.625rem;
+}
+.modeToggle button {
+    color: #fff;
+    padding: 0.625rem;
+    border-radius: 5px 5px 0 0;
+    cursor: pointer;
+    height: 40px;
+}
+.modeToggle button:hover,
+.modeToggle button.active-button {
+    color: #fff;
+    padding: 0.625rem;
+    background-color: #4D515D;
+}

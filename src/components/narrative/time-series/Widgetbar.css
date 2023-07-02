@@ -1,0 +1,98 @@
+.widgetSection{
+    display: flex;
+    gap: 0.625rem;
+    /* position: absolute; */
+}
+.symbolBox{
+    background-color: #23252B;
+    border-radius: 5px;
+    padding: 0.625rem;
+    max-width: 100%;
+    max-height: calc(100vh - 70px);
+    height: calc(100vh - 135px);
+    position: absolute;
+    left: 50px;
+    width: calc(100% - 60px)
+}
+.widgetBar{
+    background-color: #23252B;
+    display: flex;
+    flex-direction: column;
+    padding: 0.3rem;
+    gap: 0.625rem;
+    border-radius: 5px;
+    position: absolute;
+    left: 0;
+}
+.widgetButton{
+    background-color: transparent;
+    color:#fff;
+    cursor: pointer;
+    padding:0.315rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    font-size: 0.7rem;
+}
+.widgetButton > *{
+    z-index: 10;
+}
+.widgetButton .icon{
+    font-size: 1.3rem;
+}
+.widgetButton div {
+    display: none;
+}
+.symbolButton:hover:before,
+.symbolButton.active-button:before{
+    content: '';
+    background-color: #4D515D;
+    width: calc(100% + 0.2rem);
+    height: 100%;
+    display: block;
+    position: absolute;
+    top:0px;
+    z-index: 0;
+    border-radius: 5px 0 0 5px;
+    right: -0.2rem;
+}
+
+/* Styles for screens larger than 500px */
+@media (min-width: 550px) {
+    .widgetSection{
+        /* position: unset; */
+    }
+    .widgetBar{
+        padding: 0.625rem;
+        padding-left: 0.315rem;
+        position: unset;
+    }
+    .widgetButton div {
+        display: block;
+    }
+    .symbolButton:hover:before,
+    .symbolButton.active-button:before{
+        width: calc(100% + 0.315rem);
+        left: -0.315rem;
+        border-radius: 0 5px 5px 0;
+    }
+    .widgetButton .icon{
+        font-size: 1.5rem;
+    }
+    .symbolBox{
+        width: calc(100% - 155px);
+        left: 70px; 
+    }
+}
+
+/* Styles for screens larger than 900px */
+@media (min-width: 900px) {
+    .symbolBox{
+        position: relative;
+        height: auto;
+        width: 362px;
+        left: auto;
+    }
+}

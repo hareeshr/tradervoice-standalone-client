@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {Container, Link, Typography} from '@mui/material';
 
 export default function Footer() {

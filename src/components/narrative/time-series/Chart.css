@@ -1,3 +1,8 @@
+.d3fc-svg {
+  position: relative;
+  display: block;
+}
+
 .cartesian-chart {
   position: absolute; /* This seems necessary when utilizing MUI breakpoints. */
 }

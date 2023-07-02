@@ -3,7 +3,6 @@ import * as React from 'react';
 import {Stack, Typography, Tooltip, useTheme} from '@mui/material';
 import * as d3 from 'd3';
 import * as fc from 'd3fc';
-import PropTypes from 'prop-types';
 import Download from './Download';
 import PrevalenceSentimentSelector from './PrevalenceSentimentSelector';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
@@ -11,50 +10,67 @@ import WeightsStats from './WeightsStats';
 import {red} from '@mui/material/colors';
 import ArticleBox from './ArticleBox';
 import {useSearchParams} from 'react-router-dom';
+import { WeightTimeSeries, WeightPoint, PricePoint } from './../../../types'
 
 const SP_VALUES = 'values';
 const SP_VALUES_SENTIMENT = 'sentiment';
 
-const Chart = ({timeSeries}) => {
+
+type chartProps = {
+  timeSeries : WeightTimeSeries
+}
+
+const Chart = ({timeSeries}: chartProps) => {
   const theme = useTheme();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const svg = React.useRef(null);
+  const svgRef = React.useRef<any>(null);
 
-  const [isSentimentSelected, setSentimentSelected] = React.useState(searchParams.get(SP_VALUES) === SP_VALUES_SENTIMENT);
-  const [selectedArticle, setSelectedArticle] = React.useState(null);
-  const [xDomain, setXDomain] = React.useState();
-
+  const [isSentimentSelected, setSentimentSelected] = React.useState(
+    searchParams.get(SP_VALUES) === SP_VALUES_SENTIMENT
+  );
+  const [selectedArticle, setSelectedArticle] = React.useState<{ article: any; x: number; y: number; } | null>(null);
+  const [xDomain, setXDomain] = React.useState<Date[] | undefined>();
+  
   React.useMemo(() => {
     setSelectedArticle(null); // Hide article (if any) when origin may change.
   }, [isSentimentSelected, xDomain]);
-
+  
   React.useEffect(() => {
     renderChart(
       timeSeries.meta.from,
-      timeSeries.price.points.map(p => ({...p, tstamp: new Date(p.tstamp)})), // TODO Possible to render discontinuities as dimmed background fade?
+      timeSeries.price.points?.map((p) => ({ ...p, tstamp: new Date(p.tstamp) })) || [],
       timeSeries.price.color,
-      timeSeries.weights.map(e => e.points.map(p => ({...p, tstamp: new Date(p.tstamp), value: isSentimentSelected ? p.sentiment : p.prevalence}))),
-      timeSeries.weights.map(e => e.color),
+      timeSeries.weights.map((e:{
+        color: string;
+        points: WeightPoint[];
+      }) =>
+        e.points.map((p) => ({ ...p, tstamp: new Date(p.tstamp), value: isSentimentSelected ? p.sentiment : p.prevalence }))
+      ),
+      timeSeries.weights.map((e:{
+        color: string;
+        points: WeightPoint[];
+    }) => e.color),
       isSentimentSelected
     );
-  }, [timeSeries, isSentimentSelected, xDomain]);
+  }, [timeSeries, isSentimentSelected]);
 
-  const handleSentimentSelection = selection => {
+  const handleSentimentSelection = (selection: boolean): void => {
     setSearchParams(
-      sp => {
+      (sp: URLSearchParams) => {
         if (selection) {
           sp.set(SP_VALUES, SP_VALUES_SENTIMENT);
         } else {
           sp.delete(SP_VALUES);
         }
-
+  
         return sp;
       },
-      {replace: true}
+      { replace: true }
     );
     setSentimentSelected(selection);
-  }
+  };
+  
 
   /**
    * @param {Date} from
@@ -64,28 +80,38 @@ const Chart = ({timeSeries}) => {
    * @param {string[]} weightsColors
    * @param {boolean} weightsUseSentiment
    */
-  const renderChart = (from, pricePoints, priceColor, weightsPoints, weightsColors, weightsUseSentiment) => {
-    const hasPrice = pricePoints.length > 0;
-    const significantPoints = weightsPoints
-      .flatMap((series, i) => series
-        .filter(point => point.significant != null)
-        .map(point => ({...point, color: weightsColors[i]}))
+  const renderChart = (
+    from: Date,
+    pricePoints: { price: number | null; tstamp: Date }[],
+    priceColor: string,
+    weightsPoints: { tstamp: Date; value: number | undefined; significant: any; sentiment?: number | undefined; prevalence?: number | undefined; }[][],
+    weightsColors: string[],
+    weightsUseSentiment: boolean
+  ): void => {
+    // console.log({from, pricePoints, priceColor, weightsPoints, weightsColors, weightsUseSentiment})
+    // console.log(JSON.stringify(weightsPoints));
+    const hasPrice: boolean = pricePoints.length > 0;
+    const significantPoints: Array<any> = weightsPoints
+      .flatMap((series: Array<any>, i: number) => series
+        .filter((point: any) => point.significant != null)
+        .map((point: any) => ({ ...point, color: weightsColors[i] }))
       );
-
+    
     const domainWeights = fc
       .extentLinear()
-      .accessors([d => d.value])(weightsPoints.flatMap(p => p));
-    let rangeWeights = [0, 100]; // Prevalence is normalized to the range [0, 100] (unless prices are provided)
+      .accessors([(d: any) => d.value])(weightsPoints.flatMap((p: any) => p));
+    let rangeWeights: [number, number] = [0, 100]; // Prevalence is normalized to the range [0, 100] (unless prices are provided)
     if (weightsUseSentiment) {
-      const weightValueMultiplier = 100 / Math.max(...domainWeights.map(Math.abs));
-      rangeWeights = domainWeights.map(d => d * weightValueMultiplier); // Sentiment is normalized inside the bounds of [-100, 100] (unless prices are provided)
+      const weightValueMultiplier: number = 100 / Math.max(...domainWeights.map(Math.abs));
+      rangeWeights = domainWeights.map((d: number) => d * weightValueMultiplier); // Sentiment is normalized inside the bounds of [-100, 100] (unless prices are provided)
     }
-    const [yMin, yMax] = hasPrice
+    const [yMin, yMax]: [number, number] = hasPrice
       ? fc
         .extentLinear()
-        .accessors([d => d.price])(pricePoints)
+        .accessors([(d: any) => d.price])(pricePoints)
       : rangeWeights;
-    const yPadding = .05 * (yMax - yMin); // 5% top and bottom padding
+    const yPadding: number = 0.05 * (yMax - yMin); // 5% top and bottom padding
+    
 
     const scaleWeightFn = d3
       .scaleLinear()
@@ -95,10 +121,10 @@ const Chart = ({timeSeries}) => {
     // Price (single series, may be empty)
     const priceSeries = fc
       .seriesSvgArea()
-      .mainValue(d => d.price)
-      .crossValue(d => d.tstamp)
-      .baseValue(_ => yMin - yPadding) // Make sure gradient goes all the way to the Y-axis
-      .decorate(sel => sel
+      .mainValue((d:any) => d.price)
+      .crossValue((d:any) => d.tstamp)
+      .baseValue((_:any) => yMin - yPadding) // Make sure gradient goes all the way to the Y-axis
+      .decorate((sel:any) => sel
         .enter()
           .attr('fill', () => 'url(#price-area-gradient)')
       );
@@ -108,16 +134,16 @@ const Chart = ({timeSeries}) => {
       .seriesSvgRepeat()
       .series(fc
         .seriesSvgLine()
-        .mainValue(d => scaleWeightFn(d.value))
-        .crossValue(d => d.tstamp)
-        .decorate(sel => sel
+        .mainValue((d:any) => scaleWeightFn(d.value))
+        .crossValue((d:any) => d.tstamp)
+        .decorate((sel:any) => sel
           .attr('stroke', () => null) // In order to let repeat-series color by index.
         )
       )
       .orient('horizontal')
-      .decorate(sel => sel
-        .attr('stroke', (_, i) => weightsColors[i])
-        .attr('stroke-width', () => 2)
+      .decorate((sel:any) => sel
+      .attr('stroke', (_: any, i: number) => weightsColors[i])
+      .attr('stroke-width', () => 2)
       );
 
     // Grid lines
@@ -130,15 +156,15 @@ const Chart = ({timeSeries}) => {
     const significantSeries = fc
       .seriesSvgPoint()
       .size(100)
-      .crossValue(d => d.tstamp)
-      .mainValue(d => scaleWeightFn(d.value))
-      .decorate(sel => {
+      .crossValue((d: any) => d.tstamp)
+      .mainValue((d: any) => scaleWeightFn(d.value))
+      .decorate((sel: any) => {
         sel
-          .attr('fill', d => d.color)
+          .attr('fill', (d: any) => d.color)
           .attr('fill-opacity', () => 0.7)
           .attr('stroke', () => theme.palette.background.default)
         sel
-          .on('mouseover', (e, d) => {
+          .on('mouseover', (e: MouseEvent, d: any) => {
             setSelectedArticle({
               article: d.significant,
               x: Math.max(0, e.pageX - 150),
@@ -175,20 +201,20 @@ const Chart = ({timeSeries}) => {
         })
       });
      */
-
-    const multi = fc
+      const multi = fc
       .seriesSvgMulti()
       .series([gridlines, priceSeries, weightsSeries, significantSeries])
-      .mapping((data, index, series) => {
+      .mapping((data: any, index: number, series: any[]) => {
         switch (series[index]) {
           case significantSeries:
             return data.significantPoints;
           case priceSeries:
             return data.pricePoints;
           default:
-            return data.weightsPoints
+            return data.weightsPoints;
         }
       });
+    
 
     const xScale = d3.scaleTime().domain(xDomain || [from, new Date()]);
     const xScaleOriginal = xScale.copy();
@@ -202,7 +228,7 @@ const Chart = ({timeSeries}) => {
         xScale,
         yScale: d3.scaleLinear().domain([yMin - yPadding, yMax + yPadding]),
         xAxis: {
-          bottom: scale => fc.axisLabelRotate(fc.axisOrdinalBottom(scale))
+          bottom: (scale: any) => fc.axisLabelRotate(fc.axisOrdinalBottom(scale))
         }
       })
       .svgPlotArea(multi)
@@ -214,16 +240,16 @@ const Chart = ({timeSeries}) => {
         sel
           .enter()
             .selectAll('.plot-area')
-            .call(zoom);
+            .call(zoom as any);
       });
     if (weightsUseSentiment) {
-      chart.yDecorate(sel => sel
+      chart.yDecorate((sel: any) => sel
         .select('text')
-        .style('fill', d => d < 0 ? red['A400'] : undefined)
+        .style('fill', (d: any) => d < 0 ? red['A400'] : undefined)
       );
     }
 
-    d3.select(svg.current)
+    d3.select(svgRef.current)
       .datum({
         pricePoints,
         weightsPoints,
@@ -249,7 +275,7 @@ const Chart = ({timeSeries}) => {
           </linearGradient>
         </defs>
       </svg>
-      <d3fc-svg ref={svg} style={{flex: '1 0 auto', width: '100%'}}/>
+      <div className="d3fc-svg" ref={svgRef} style={{flex: '1 0 auto', width: '100%', height: '50%'}}/>
       {selectedArticle &&
         <ArticleBox
           article={selectedArticle.article}
@@ -273,48 +299,11 @@ const Chart = ({timeSeries}) => {
         mr={8}
         spacing={2}
       >
-        <PrevalenceSentimentSelector sentimentSelected={isSentimentSelected} onChange={handleSentimentSelection}/>
-        <Download sx={{minWidth: 'fit-content'}} weights={timeSeries.weights}/>
+        {/* <PrevalenceSentimentSelector sentimentSelected={isSentimentSelected} onChange={handleSentimentSelection}/> */}
+        {/* <Download sx={{minWidth: 'fit-content'}} weights={timeSeries.weights}/> */}
       </Stack>
     </React.Fragment>
   );
-}
-
-Chart.propTypes = {
-  timeSeries: PropTypes
-    .shape({
-      meta: PropTypes
-        .shape({
-          from: PropTypes.instanceOf(Date).isRequired,
-          weightsStats: PropTypes.object
-        })
-        .isRequired,
-      price: PropTypes
-        .shape({
-          color: PropTypes.string.isRequired,
-          points: PropTypes
-            .arrayOf(PropTypes.shape({
-              price: PropTypes.number.isRequired,
-              tstamp: PropTypes.string.isRequired
-            }))
-            .isRequired
-        })
-        .isRequired,
-      weights: PropTypes
-        .arrayOf(PropTypes.shape({
-          color: PropTypes.string.isRequired,
-          points: PropTypes
-            .arrayOf(PropTypes.shape({
-              prevalence: PropTypes.number.isRequired,
-              sentiment: PropTypes.number.isRequired,
-              significant: PropTypes.object,
-              tstamp: PropTypes.string.isRequired
-            }))
-            .isRequired
-          }))
-        .isRequired
-    })
-    .isRequired
 }
 
 export default Chart;

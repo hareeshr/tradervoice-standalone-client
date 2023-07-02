@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@d3fc/d3fc-annotation": "^3.0.12",
+    "@d3fc/d3fc-element": "^6.2.0",
     "@emotion/react": "11.10.6",
     "@emotion/styled": "11.10.6",
     "@fontsource/roboto": "4.5.8",
@@ -13,19 +15,25 @@
     "@testing-library/user-event": "13.5.0",
     "d3": "7.8.2",
     "d3fc": "15.2.6",
+    "d3fc-element": "^4.0.0",
     "export-to-csv": "0.2.1",
+    "highcharts": "^11.1.0",
+    "highcharts-react-official": "^3.2.0",
     "lorem-ipsum": "2.0.8",
+    "postcss-preset-env": "^8.5.1",
     "prop-types": "15.8.1",
     "react": "18.2.0",
+    "react-custom-scrollbars-2": "^4.5.0",
     "react-dom": "18.2.0",
     "react-router-dom": "6.8.1",
     "react-scripts": "5.0.0",
     "web-vitals": "2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test"
+    "start": "react-scripts start --entry ./src/index.tsx",
+    "build": "react-scripts build --entry ./src/index.tsx",
+    "test": "react-scripts test --entry ./src/index.tsx",
+    "build:ts": "tsc"
   },
   "eslintConfig": {
     "extends": [
@@ -44,5 +52,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.0",
+    "typescript": "^4.9.5"
   }
 }

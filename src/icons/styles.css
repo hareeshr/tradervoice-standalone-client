@@ -1,0 +1,97 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: "trader-voice-icon-pack";
+  src:url("./trader-voice-icon-pack.eot");
+  src:url("./trader-voice-icon-pack.eot?#iefix") format("embedded-opentype"),
+    url("./trader-voice-icon-pack.woff") format("woff"),
+    url("./trader-voice-icon-pack.ttf") format("truetype"),
+    url("./trader-voice-icon-pack.svg#trader-voice-icon-pack") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+[data-icon]:before {
+  font-family: "trader-voice-icon-pack" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="tv-icon-"]:before,
+[class*=" tv-icon-"]:before {
+  font-family: "trader-voice-icon-pack" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.tv-icon-submit:before {
+  content: "\61";
+}
+.tv-icon-zoom:before {
+  content: "\62";
+}
+.tv-icon-close:before {
+  content: "\63";
+}
+.tv-icon-cross-hair:before {
+  content: "\64";
+}
+.tv-icon-delete:before {
+  content: "\65";
+}
+.tv-icon-download:before {
+  content: "\66";
+}
+.tv-icon-up:before {
+  content: "\67";
+}
+.tv-icon-shape:before {
+  content: "\68";
+}
+.tv-icon-search:before {
+  content: "\69";
+}
+.tv-icon-edit:before {
+  content: "\6a";
+}
+.tv-icon-line:before {
+  content: "\6b";
+}
+.tv-icon-flag:before {
+  content: "\6c";
+}
+.tv-icon-filter:before {
+  content: "\6d";
+}
+.tv-icon-fullscreen:before {
+  content: "\6e";
+}
+.tv-icon-crooked-lines:before {
+  content: "\6f";
+}
+.tv-icon-hide:before {
+  content: "\70";
+}
+.tv-icon-logout:before {
+  content: "\71";
+}
+.tv-icon-symbol:before {
+  content: "\72";
+}
+.tv-icon-graph:before {
+  content: "\73";
+}

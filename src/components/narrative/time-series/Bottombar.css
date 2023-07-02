@@ -1,0 +1,47 @@
+.bottom-bar{
+    background-color: #23252B;
+    padding: 0.625rem 0.625rem 0;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+.summaryToggle button{
+    color:#fff;
+    padding: 0.3rem 0.625rem;
+    border:2px solid #fff;
+    margin-bottom: 0.625rem;
+    border-radius: 5px;
+    padding-right: 2rem;
+    position: relative;
+    cursor: pointer;
+}
+.summaryToggle button:hover{
+    background-color: #4D515D;
+}
+.summaryToggle button .icon{
+    position: absolute;
+    right: 0.625rem;
+    font-size: 0.7rem;
+    top: 0.4rem;
+    transition: transform 0.3s ease;
+}
+.summaryToggle button.active-button .icon{
+    transform: rotate(180deg);
+}
+.summaryToggle button span {
+    display: none;
+}
+/* Styles for screens larger than 500px */
+@media (min-width: 550px) {
+    .summaryToggle button{
+        height: auto;
+        padding: 0.625rem;
+        padding-right: 2rem;
+    }
+    .summaryToggle button span {
+        display: inline-block;
+    }
+    .summaryToggle button .icon{
+        top: 0.7rem;
+    }
+}
