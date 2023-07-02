@@ -217,7 +217,7 @@ const HighChart = () =>{
                       enabled: false
                   }
               }
-          }
+          },
         }, 
         minY: minY
       }
@@ -375,7 +375,10 @@ const HighChart = () =>{
       
       </div>
 
-      <WeightsStats sx={{ml: 2, mr: 8}} stats={combinedTimeSeries?.meta.weightsStats}/>
+      {
+        combinedTimeSeries?.meta.weightsStats && 
+        <WeightsStats sx={{ml: 2, mr: 8}} stats={combinedTimeSeries?.meta.weightsStats}/>
+      }
       <SearchEntries />
 
       
