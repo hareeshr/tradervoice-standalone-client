@@ -7,6 +7,7 @@
     padding: 0.625rem;
     border-radius: 5px 5px 0 0;
     cursor: pointer;
+    height: 40px;
 }
 .modeToggle button:hover,
 .modeToggle button.active-button {

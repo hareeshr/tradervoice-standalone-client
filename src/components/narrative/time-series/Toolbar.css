@@ -1,3 +1,7 @@
+.toolbar-container{
+    padding-top: 100px;
+    display: flex;
+}
 .toolbar{
     display: flex;
     position: relative;
@@ -25,10 +29,10 @@
     line-height: 0.8rem;
     align-items: center;
     text-align: center;
-    width: 50px;
+    width: 30px;
     cursor: pointer;
     gap: 0.2rem;
-    padding: 0.5rem 0.3rem 0;
+    padding: 0.2rem 0;
     border-radius: 5px;
 }
 .stocktools-toolbar li.active,
@@ -60,4 +64,20 @@
 }
 .stocktools-toolbar li.toolbar-divider:hover{
     background-color: transparent;
+}
+.toolbar .highcharts-menu-item-title{
+    display: none;
+}
+/* Styles for screens larger than 500px */
+@media (min-width: 550px) {
+    .toolbar-container {
+        padding-top: 0;
+    }
+    .toolbar .highcharts-menu-item-title{
+        display: block;
+    }
+    .stocktools-toolbar li {
+        padding: 0.5rem 0.3rem 0;
+        width: 50px;
+    }
 }
